@@ -1,3 +1,23 @@
+<?php
+require_once 'db_connectie.php';
+
+// maak verbinding met de database (zie db_connection.php)
+$db = maakVerbinding();
+$query = 'select * from product';
+
+$data = $db->query($query);
+
+$html = "";
+$textdata = "";
+while($rij = $data->fetch()) {
+  $name = $rij['name'];
+  $html = $html . '<li>' . $name . "</li>";
+  $textdata = $textdata . '<br>' . $rij[0] . ' - ' . $rij[1] . ' - ' . $rij[2];
+}
+echo '<ul style="list-style-type: none">' . $html . '</ul>';
+echo $textdata;
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
