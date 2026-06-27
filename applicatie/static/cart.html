@@ -1,44 +1,31 @@
-<?php
-
-require_once './includes/setup.php';
-
-
-?>
-
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Menu</title>
-    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="../css/main.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
 </head>
-
 <body>
 
     <header>
         <nav class="main-nav">
-            <a class="logo" href="#">
-                <div class="logo">Pizzeria</div>
-            </a>
+            <a class="logo" href="./index.html"><img src="../img/Pizzeria.png" alt="Pizzeria logo"/></a>
 
             <div class="nav-links">
-                <a href="#">Current order</a>
-                <a href="#">Account</a>
+                <a class="button" href="./">Current order</a>
+                <a class="button" href="#">Account</a>
             </div>
         </nav>
     </header>
 
     <main>
-        <a href="static/">To the static version!</a>
-        <div class="products">
-
+        <div class="content order">
         </div>
     </main>
-</body>
 
+</body>
 </html>

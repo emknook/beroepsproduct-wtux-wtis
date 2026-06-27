@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order</title>
+    <link rel="stylesheet" href="../css/main.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <header>
+        <nav class="main-nav">
+            <a class="logo" href="index.html"><img src="../img/Pizzeria.png" alt="Pizzeria logo"/></a>
+
+            <div class="nav-links">
+                <a class="button">
+                    Current order
+                </a>
+                <div class="expandable-button">
+                    <a class="expandable-button__label" href="#">
+                        Account
+                    </a>
+                    <div class="expandable-panel">
+                        <div class="input-area">
+                            <label for="username">Username</label>
+                            <input name="username" class="text-input" type="email">
+                            <label for="password">Password</label>
+                            <input name="password" class="text-input" type="password">
+                        </div>
+                        <div class="expandable-panel-actions">
+                            <a href="./register.html">Register</a>
+                            <a class="button" href="indexSignedIn.html">Sign in</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <div class="content">
+            <form>
+                <h1 class="form-title">Place order</h1>
+                <div class="order-products">
+                    <div class="order-product">
+                        <div class="product-name">
+                            Product name
+                        </div>
+                        <div class="product-ingredients">
+                            Ingredient, ingredient
+                        </div>
+                        <div class="product-price">
+                            $10,00
+                        </div>
+                        <div class="product-price-per">
+                            $5,00
+                        </div>
+                        <div class="product-amount">
+                            <button>-</button>
+                            <span>1</span>
+                            <button>+</button>
+                        </div>
+                    </div>
+                    <div class="order-product">
+                        <div class="product-name">
+                            Product name
+                        </div>
+                        <div class="product-ingredients">
+                            Ingredient, ingredient
+                        </div>
+                        <div class="product-price">
+                            $10,00
+                        </div>
+                        <div class="product-price-per">
+                            $5,00
+                        </div>
+                        <div class="product-amount">
+                            <button>-</button>
+                            <span>1</span>
+                            <button>+</button>
+                        </div>
+                    </div>
+                    <div class="order-total">
+                        <div class="order-total__label">
+                            Total
+                        </div>
+                        <div class="order-total__price">
+                            $10,00
+                        </div>
+                    </div>
+                </div>
+                <div class="address-input-wrapper">
+                    <div class="address-icon">
+                        <svg viewBox="-4 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns">
+                            <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" sketch:type="MSPage">
+                                <g id="Icon-Set-Filled" sketch:type="MSLayerGroup" transform="translate(-106.000000, -413.000000)">
+                                    <path d="M118,422 C116.343,422 115,423.343 115,425 C115,426.657 116.343,428 118,428 C119.657,428 121,426.657 121,425 C121,423.343 119.657,422 118,422 L118,422 Z M118,430 C115.239,430 113,427.762 113,425 C113,422.238 115.239,420 118,420 C120.761,420 123,422.238 123,425 C123,427.762 120.761,430 118,430 L118,430 Z M118,413 C111.373,413 106,418.373 106,425 C106,430.018 116.005,445.011 118,445 C119.964,445.011 130,429.95 130,425 C130,418.373 124.627,413 118,413 L118,413 Z" id="location" sketch:type="MSShapeGroup"></path>
+                                </g>
+                            </g>
+                        </svg>
+                    </div>
+                    <div class="address-input">
+                        <label for="zip">Zipcode</label>
+                        <input class="text-input" name="zip"/>
+                    </div>
+                    <div class="address-input">
+                        <label for="housenumber">House number</label>
+                        <input class="text-input" name="housenumber"/>
+                    </div>
+                    <div class="address-input">
+                        <label for="street">Street</label>
+                        <input class="text-input" name="street"/>
+                    </div>
+                    <div class="address-input">
+                        <label for="city">City</label>
+                        <input class="text-input" name="city"/>
+                    </div>
+                </div>
+                <a class="button submit-button" href="orderStatus.html" >Submit order</a>
+            </form>
+        </div>
+    </main>
+
+</body>
+</html>
