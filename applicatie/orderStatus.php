@@ -6,112 +6,6 @@ $db = db();
 
 $error = null;
 
-function getOrderStatusLabel(int $status): string
-{
-    return match ($status) {
-        0 => 'New',
-        1 => 'Accepted / being prepared',
-        2 => 'In the oven',
-        3 => 'Ready for delivery',
-        4 => 'Out for delivery',
-        5 => 'Arrived',
-        10 => 'Denied',
-        default => 'Unknown',
-    };
-}
-
-function getLatestOrderForCurrentVisitor(PDO $db): ?array
-{
-    if (isSignedIn()) {
-        $stmt = $db->prepare("
-            SELECT TOP 1
-                order_id,
-                client_username,
-                client_name,
-                personnel_username,
-                datetime,
-                status,
-                address
-            FROM Pizza_Order
-            WHERE client_username = :client_username
-            ORDER BY datetime DESC, order_id DESC
-        ");
-
-        $stmt->execute([
-            ':client_username' => $_SESSION['user']['username'],
-        ]);
-
-        $order = $stmt->fetch();
-
-        return $order ?: null;
-    }
-
-    $lastOrderId = $_SESSION['last_order_id'] ?? null;
-
-    if ($lastOrderId === null) {
-        return null;
-    }
-
-    $stmt = $db->prepare("
-        SELECT TOP 1
-            order_id,
-            client_username,
-            client_name,
-            personnel_username,
-            datetime,
-            status,
-            address
-        FROM Pizza_Order
-        WHERE order_id = :order_id
-    ");
-
-    $stmt->execute([
-        ':order_id' => $lastOrderId,
-    ]);
-
-    $order = $stmt->fetch();
-
-    return $order ?: null;
-}
-
-function updateOrderStatus(PDO $db, int $orderId, int $status): bool
-{
-    $stmt = $db->prepare("
-        UPDATE Pizza_Order
-        SET status = :status
-        WHERE order_id = :order_id
-    ");
-
-    return $stmt->execute([
-        ':status' => $status,
-        ':order_id' => $orderId,
-    ]);
-}
-
-function statusClass(int $currentStatus, int $stepStatus): string
-{
-    if ($currentStatus === 10) {
-        return '';
-    }
-
-    return $currentStatus >= $stepStatus ? ' processed' : '';
-}
-
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $action = $_POST['action'] ?? '';
-
-    if ($action === 'mark_arrived') {
-        $orderId = (int) ($_POST['order_id'] ?? 0);
-
-        if ($orderId > 0) {
-            updateOrderStatus($db, $orderId, 5);
-        }
-
-        header('Location: orderStatus.php');
-        exit;
-    }
-}
-
 $order = getLatestOrderForCurrentVisitor($db);
 
 if ($order === null) {
@@ -150,9 +44,6 @@ $statusLabel = getOrderStatusLabel($status);
                     <div class="order-status-info">
                         <p>
                             Order #<?= (int) $order['order_id'] ?>
-                        </p>
-                        <p>
-                            Status: <?= e($statusLabel) ?>
                         </p>
                         <p>
                             Name: <?= e((string) $order['client_name']) ?>

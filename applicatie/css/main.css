@@ -28,6 +28,16 @@ main {
     place-items: center;
 }
 
+button {
+    background-color: transparent;
+    border: 0;
+    text-decoration: underline;
+}
+
+button:hover {
+    cursor: pointer;
+}
+
 .content {
     width: 100%;
     max-width: 1100px;
@@ -181,7 +191,6 @@ types
     display: grid;
     grid-template-columns: auto minmax(0, 1fr) auto;
     align-items: center;
-    gap: 1rem;
 
     width: 100%;
     min-width: 0;
@@ -202,6 +211,7 @@ types
     overflow-y: hidden;
 
     scrollbar-width: none;
+    padding: 0 2em;
 }
 
 .types__scroll::-webkit-scrollbar {
@@ -233,6 +243,14 @@ types
     }
 }
 
+.carousel-right {
+    transform: translateX(-1em);
+}
+
+.carousel-left {
+    transform: translateX(1em);
+}
+
 .carousel-left,
 .carousel-right {
 
@@ -245,6 +263,8 @@ types
 
     border: 2px solid var(--primary);
     border-radius: 50%;
+    background-color: var(--secondary);
+    overflow: hidden;
 }
 
 .carousel-left:hover,
@@ -340,6 +360,10 @@ types
     display: flex;
     justify-content: space-between;
     align-items: center;
+}
+
+.expandable-panel-actions button {
+    color: var(--tertiary);
 }
 
 .expandable-panel-actions .button {
@@ -922,6 +946,11 @@ types
     text-decoration: underline;
 }
 
+.order-status-info {
+    display: grid;
+    grid-template-columns: 1fr;
+}
+
 @media screen and (min-width: 600px) {
     .order-status { 
         min-width: 600px;
@@ -1025,6 +1054,11 @@ types
     fill: var(--secondary);
     background-color: var(--primary);
 
+    button {
+        background-color: transparent;
+        border: 0;
+    }
+
     svg {
         justify-self: center;
         max-height: 72px;
@@ -1040,3 +1074,20 @@ types
     grid-template-columns: 1fr 1fr;
 }
 
+@media screen and (max-width: 1000px) {
+    .order-overview {
+        grid-template-columns: 1fr 1fr 1fr;
+    }
+}
+
+@media screen and (max-width: 700px) {
+    .order-overview {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media screen and (max-width: 500px) {
+    .order-overview {
+        grid-template-columns: 1fr;
+    }
+}

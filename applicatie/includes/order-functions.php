@@ -235,3 +235,211 @@ function groupOrders(array $rows): array
 
     return array_values($orders);
 }
+
+function getOrderStatusLabel(int $status): string
+{
+    return match ($status) {
+        0 => 'New',
+        1 => 'Accepted / being prepared',
+        2 => 'In the oven',
+        3 => 'Ready for delivery',
+        4 => 'Out for delivery',
+        5 => 'Arrived',
+        10 => 'Denied',
+        default => 'Unknown',
+    };
+}
+
+function getOrderOverview(PDO $db): array
+{
+    $stmt = $db->prepare("
+        SELECT
+            po.order_id,
+            po.client_username,
+            po.client_name,
+            po.personnel_username,
+            po.datetime,
+            po.status,
+            po.address,
+            pop.product_name,
+            pop.quantity
+        FROM Pizza_Order po
+        JOIN Pizza_Order_Product pop
+            ON pop.order_id = po.order_id
+        ORDER BY 
+            CASE 
+                WHEN po.status = 0 THEN 0
+                WHEN po.status IN (1, 2, 3, 4) THEN 1
+                WHEN po.status = 10 THEN 2
+                ELSE 3
+            END,
+            po.status DESC,
+            po.datetime ASC,
+            po.order_id ASC
+    ");
+
+    $stmt->execute();
+
+    return groupOrderOverviewRows($stmt->fetchAll());
+}
+
+function groupOrderOverviewRows(array $rows): array
+{
+    $orders = [];
+
+    foreach ($rows as $row) {
+        $orderId = (int) $row['order_id'];
+
+        if (!isset($orders[$orderId])) {
+            $orders[$orderId] = [
+                'order_id' => $orderId,
+                'client_username' => $row['client_username'],
+                'client_name' => $row['client_name'],
+                'personnel_username' => $row['personnel_username'],
+                'datetime' => $row['datetime'],
+                'status' => (int) $row['status'],
+                'address' => $row['address'],
+                'products' => [],
+            ];
+        }
+
+        $orders[$orderId]['products'][] = [
+            'name' => $row['product_name'],
+            'quantity' => (int) $row['quantity'],
+        ];
+    }
+
+    return array_values($orders);
+}
+
+function updateOrderStatus(PDO $db, int $orderId, int $status): bool
+{
+    $allowedStatuses = [0, 1, 2, 3, 4, 5, 10];
+
+    if (!in_array($status, $allowedStatuses, true)) {
+        return false;
+    }
+
+    $stmt = $db->prepare("
+        UPDATE Pizza_Order
+        SET status = :status
+        WHERE order_id = :order_id
+    ");
+
+    return $stmt->execute([
+        ':status' => $status,
+        ':order_id' => $orderId,
+    ]);
+}
+
+function getLatestOrderForCurrentVisitor(PDO $db): ?array
+{
+    if (isSignedIn()) {
+        $stmt = $db->prepare("
+            SELECT TOP 1
+                order_id,
+                client_username,
+                client_name,
+                personnel_username,
+                datetime,
+                status,
+                address
+            FROM Pizza_Order
+            WHERE client_username = :client_username
+            ORDER BY datetime DESC, order_id DESC
+        ");
+
+        $stmt->execute([
+            ':client_username' => $_SESSION['user']['username'],
+        ]);
+
+        $order = $stmt->fetch();
+
+        return $order ?: null;
+    }
+
+    $lastOrderId = $_SESSION['last_order_id'] ?? null;
+
+    if ($lastOrderId === null) {
+        return null;
+    }
+
+    $stmt = $db->prepare("
+        SELECT TOP 1
+            order_id,
+            client_username,
+            client_name,
+            personnel_username,
+            datetime,
+            status,
+            address
+        FROM Pizza_Order
+        WHERE order_id = :order_id
+    ");
+
+    $stmt->execute([
+        ':order_id' => $lastOrderId,
+    ]);
+
+    $order = $stmt->fetch();
+
+    return $order ?: null;
+}
+
+function statusClass(int $currentStatus, int $stepStatus): string
+{
+    if ($currentStatus === 10) {
+        return '';
+    }
+
+    return $currentStatus >= $stepStatus ? ' processed' : '';
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $action = $_POST['action'] ?? '';
+
+    if ($action === 'mark_arrived') {
+        $orderId = (int) ($_POST['order_id'] ?? 0);
+
+        if ($orderId > 0) {
+            updateOrderStatus($db, $orderId, 5);
+        }
+
+        header('Location: orderStatus.php');
+        exit;
+    }
+}
+
+
+function formatOrderDateTime(mixed $datetime): string
+{
+    if ($datetime instanceof DateTimeInterface) {
+        return $datetime->format('d.m.y') . '<br>' . $datetime->format('H:i');
+    }
+
+    $timestamp = strtotime((string) $datetime);
+
+    if ($timestamp === false) {
+        return e((string) $datetime);
+    }
+
+    return date('d.m.y', $timestamp) . '<br>' . date('H:i', $timestamp);
+}
+
+function getOrderCssClass(int $status): string
+{
+    return match ($status) {
+        1, 2, 3, 4, 5 => 'accepted',
+        10 => 'denied',
+        default => '',
+    };
+}
+
+function isStatusProcessed(int $currentStatus, int $stepStatus): string
+{
+    if ($currentStatus === 10) {
+        return '';
+    }
+
+    return $currentStatus >= $stepStatus ? ' processed' : '';
+}

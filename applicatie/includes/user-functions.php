@@ -65,7 +65,7 @@ function registerUser(
         ':first_name' => $firstName,
         ':last_name' => $lastName,
         ':password' => $hashedPassword,
-        ':role' => 'Client',
+        ':role' => 'Personnel',
     ]);
 }
 
@@ -97,7 +97,7 @@ function signIn(PDO $db, string $username, string $password): bool
     ];
 
     if ($user['role'] === 'Personnel') {
-        header('Location: employee/orderoverview.php');
+        header('Location: ../employee/orderOverview.php');
         exit;
     }
 
