@@ -9,30 +9,8 @@ $error = null;
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $action = $_POST['action'] ?? '';
 
-    if ($action === 'add_to_cart') {
-        $productName = $_POST['product_name'] ?? '';
-
-        if ($productName !== '') {
-            addProductToCart($db, $productName);
-        }
-
-        header('Location: ' . $_SERVER['REQUEST_URI']);
-        exit;
-    }
-
-    if ($action === 'remove_from_cart') {
-        $productName = $_POST['product_name'] ?? '';
-
-        if ($productName !== '') {
-            removeFromCart($productName);
-        }
-
-        header('Location: ' . $_SERVER['REQUEST_URI']);
-        exit;
-    }
-
     if ($action === 'register_user') {
-        $success = registerUser(
+        $success = registerPersonnelUser(
             $db,
             $_POST['username'] ?? '',
             $_POST['first_name'] ?? '',

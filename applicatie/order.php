@@ -130,7 +130,7 @@ function formatPrice(float $price): string
 
                 <?php if ($error !== null): ?>
                     <p class="form-error">
-                        <?= e($error) ?>
+                        <?= escapeHtml($error) ?>
                     </p>
                 <?php endif; ?>
 
@@ -150,11 +150,11 @@ function formatPrice(float $price): string
 
                         <div class="order-product">
                             <div class="product-name">
-                                <?= e($name) ?>
+                                <?= escapeHtml($name) ?>
                             </div>
 
                             <div class="product-ingredients">
-                                <?= htmlspecialchars(implode(', ', $ingredients), ENT_QUOTES, 'UTF-8') ?>
+                                <?= escapeHtml(implode(', ', $ingredients)) ?>
                             </div>
 
                             <div class="product-price">
@@ -168,7 +168,7 @@ function formatPrice(float $price): string
                             <div class="product-amount">
                                 <form method="post" action="order.php" class="cart-amount-form">
                                     <input type="hidden" name="action" value="remove_from_cart">
-                                    <input type="hidden" name="product_name" value="<?= e($name) ?>">
+                                    <input type="hidden" name="product_name" value="<?= escapeHtml($name) ?>">
                                     <button type="submit">-</button>
                                 </form>
 
@@ -176,7 +176,7 @@ function formatPrice(float $price): string
 
                                 <form method="post" action="order.php" class="cart-amount-form">
                                     <input type="hidden" name="action" value="add_to_cart">
-                                    <input type="hidden" name="product_name" value="<?= e($name) ?>">
+                                    <input type="hidden" name="product_name" value="<?= escapeHtml($name) ?>">
                                     <button type="submit">+</button>
                                 </form>
                             </div>
@@ -215,33 +215,31 @@ function formatPrice(float $price): string
                             <div class="address-input address-input-name">
                                 <label for="client-name">Name</label>
                                 <input id="client-name" class="text-input" name="client_name"
-                                    value="<?= htmlspecialchars($defaultClientName, ENT_QUOTES, 'UTF-8') ?>" required>
+                                    value="<?= escapeHtml($defaultClientName) ?>" required>
                             </div>
 
                             <div class="address-input address-input-zip">
                                 <label for="zip">Zipcode</label>
-                                <input id="zip" class="text-input" name="zip"
-                                    value="<?= htmlspecialchars($defaultZip, ENT_QUOTES, 'UTF-8') ?>" required>
+                                <input id="zip" class="text-input" name="zip" value="<?= escapeHtml($defaultZip) ?>"
+                                    required>
                             </div>
 
                             <div class="address-input address-input-housenr">
                                 <label for="housenumber">House number</label>
-                                <input id="housenumber" class="text-input"
-                                    value="<?= htmlspecialchars($defaultHouse, ENT_QUOTES, 'UTF-8') ?>" name="housenumber"
-                                    required>
+                                <input id="housenumber" class="text-input" value="<?= escapeHtml($defaultHouse) ?>"
+                                    name="housenumber" required>
                             </div>
 
                             <div class="address-input address-input-street">
                                 <label for="street">Street</label>
-                                <input id="street" class="text-input"
-                                    value="<?= htmlspecialchars($defaultStreet, ENT_QUOTES, 'UTF-8') ?>" name="street"
-                                    required>
+                                <input id="street" class="text-input" value="<?= escapeHtml($defaultStreet) ?>"
+                                    name="street" required>
                             </div>
 
                             <div class="address-input address-input-city">
                                 <label for="city">City</label>
-                                <input id="city" class="text-input"
-                                    value="<?= htmlspecialchars($defaultCity, ENT_QUOTES, 'UTF-8') ?>" name="city" required>
+                                <input id="city" class="text-input" value="<?= escapeHtml($defaultCity) ?>" name="city"
+                                    required>
                             </div>
                         </div>
                         <button class="button submit-button" type="submit">

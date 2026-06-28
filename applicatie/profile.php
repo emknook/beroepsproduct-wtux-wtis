@@ -87,17 +87,17 @@ if ($address === '') {
             <div class="profile-details">
                 <div class="profile-details__row">
                     <div>Name</div>
-                    <div><?= e($fullName) ?></div>
+                    <div><?= escapeHtml($fullName) ?></div>
                 </div>
 
                 <div class="profile-details__row">
                     <div>Username</div>
-                    <div><?= e($username) ?></div>
+                    <div><?= escapeHtml($username) ?></div>
                 </div>
 
                 <div class="profile-details__row">
                     <div>Address</div>
-                    <div><?= e($address) ?></div>
+                    <div><?= escapeHtml($address) ?></div>
                 </div>
             </div>
         </aside>
@@ -122,7 +122,7 @@ if ($address === '') {
                 <?php foreach ($orders as $order): ?>
                     <?php
                     $orderId = (int) $order['order_id'];
-                    $datetime = e((string) $order['datetime']);
+                    $datetime = escapeHtml((string) $order['datetime']);
                     $total = formatPrice((float) $order['total']);
                     ?>
 
@@ -142,7 +142,7 @@ if ($address === '') {
                         <ul class="order-card__items">
                             <?php foreach ($order['products'] as $product): ?>
                                 <li>
-                                    <?= (int) $product['quantity'] ?>x <?= e($product['name']) ?>
+                                    <?= (int) $product['quantity'] ?>x <?= escapeHtml($product['name']) ?>
                                 </li>
                             <?php endforeach; ?>
                         </ul>

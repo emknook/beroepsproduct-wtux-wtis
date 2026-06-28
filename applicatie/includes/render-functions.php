@@ -1,14 +1,14 @@
 <?php
 
-function e(string $value): string
+function escapeHtml(?string $value): string
 {
-    return htmlspecialchars($value, ENT_QUOTES, 'UTF-8');
+    return htmlspecialchars($value ?? '', ENT_QUOTES, 'UTF-8');
 }
 
 function renderProduct(array $product): string
 {
-    $name = e($product['name']);
-    $ingredients = htmlspecialchars(implode(', ', $product['ingredients']), ENT_QUOTES, 'UTF-8');
+    $name = escapeHtml($product['name']);
+    $ingredients = escapeHtml(implode(', ', $product['ingredients']));
     $price = number_format((float) $product['price'], 2, ',', '.');
 
     return '
@@ -46,7 +46,7 @@ function renderProducts(array $products): string
 
 function renderType(array $type, ?bool $selected = false): string
 {
-    $name = e($type['name']);
+    $name = escapeHtml($type['name']);
     return '<a class="type ' . ($selected ? 'selected' : '') . '" href="index.php?type=' . $name . '">' . $name . '</a>';
 }
 
@@ -89,7 +89,7 @@ function renderCartButton(int $cartAmount): string
     }
 
     foreach ($cart as $item) {
-        $name = e($item['name']);
+        $name = escapeHtml($item['name']);
         $price = (float) $item['price'];
         $amount = (int) $item['amount'];
 
@@ -150,8 +150,8 @@ function renderCartButton(int $cartAmount): string
 function renderAccountButton(bool $isSignedIn): string
 {
     if ($isSignedIn) {
-        $username = htmlspecialchars($_SESSION['user']['username'] ?? 'Account', ENT_QUOTES, 'UTF-8');
-        $firstName = htmlspecialchars($_SESSION['user']['first_name'] ?? '', ENT_QUOTES, 'UTF-8');
+        $username = escapeHtml($_SESSION['user']['username'] ?? 'Account');
+        $firstName = escapeHtml($_SESSION['user']['first_name'] ?? '');
 
         $label = $firstName !== '' ? $firstName : $username;
 
@@ -213,14 +213,14 @@ function renderStatusButton(int $orderId, int $currentStatus, int $stepStatus, s
 
     if ($currentStatus === 10 || $currentStatus === 5) {
         return '
-            <div class="order-actions-button' . $processedClass . '" title="' . e($label) . '">
+            <div class="order-actions-button' . $processedClass . '" title="' . escapeHtml($label) . '">
                 <span>' . $stepStatus . '</span>
             </div>
         ';
     }
 
     return '
-        <form method="post" class="order-actions-button ' . $processedClass . '" title="' . e($label) . '">
+        <form method="post" class="order-actions-button ' . $processedClass . '" title="' . escapeHtml($label) . '">
             <input type="hidden" name="action" value="set_status">
             <input type="hidden" name="order_id" value="' . $orderId . '">
             <input type="hidden" name="status" value="' . $stepStatus . '">

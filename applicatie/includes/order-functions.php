@@ -431,7 +431,7 @@ function formatOrderDateTime(mixed $datetime): string
     $timestamp = strtotime((string) $datetime);
 
     if ($timestamp === false) {
-        return e((string) $datetime);
+        return escapeHtml((string) $datetime);
     }
 
     return date('d.m.y', $timestamp) . '<br>' . date('H:i', $timestamp);

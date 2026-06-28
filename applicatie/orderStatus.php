@@ -8,8 +8,10 @@ $error = null;
 
 $order = getLatestOrderForCurrentVisitor($db);
 
-if ($_GET['order']) {
-    $order = getOrderById($db, $_GET['order']);
+$urlOrder = $_GET['order'] ?? null;
+
+if ($urlOrder) {
+    $order = getOrderById($db, (int) $urlOrder);
 }
 
 if ($order === null) {
@@ -29,7 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             updateOrderStatus($db, $orderId, 5);
         }
 
-        header('Location: orderStatus.php');
+        header('Location: orderStatus.php?order=' . $orderId);
         exit;
     }
 }
@@ -59,17 +61,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <h1 class="form-title">Order status</h1>
 
                 <?php if ($error !== null): ?>
-                    <p class="form-error"><?= e($error) ?></p>
+                    <p class="form-error"><?= escapeHtml($error) ?></p>
                 <?php else: ?>
                     <div class="order-status-info">
                         <p>
                             Order #<?= (int) $order['order_id'] ?>
                         </p>
                         <p>
-                            Name: <?= e((string) $order['client_name']) ?>
+                            Name: <?= escapeHtml((string) $order['client_name']) ?>
                         </p>
                         <p>
-                            Address: <?= e((string) $order['address']) ?>
+                            Address: <?= escapeHtml((string) $order['address']) ?>
                         </p>
                     </div>
 

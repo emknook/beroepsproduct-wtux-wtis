@@ -49,7 +49,7 @@ $orders = getOrderOverview($db);
     <main>
         <div class="order-overview">
             <?php if ($error !== null): ?>
-                <p class="form-error"><?= e($error) ?></p>
+                <p class="form-error"><?= escapeHtml($error) ?></p>
             <?php endif; ?>
 
             <?php if ($orders === []): ?>
@@ -61,19 +61,19 @@ $orders = getOrderOverview($db);
                 $orderId = (int) $order['order_id'];
                 $status = (int) $order['status'];
                 $orderClass = getOrderCssClass($status);
-                $clientName = e((string) $order['client_name']);
+                $clientName = escapeHtml((string) $order['client_name']);
                 $address = nl2br(e(str_replace(', ', "\n", (string) $order['address'])));
                 $datetime = formatOrderDateTime($order['datetime']);
-                $statusLabel = e(getOrderStatusLabel($status));
+                $statusLabel = escapeHtml(getOrderStatusLabel($status));
                 ?>
 
-                <div class="order <?= e($orderClass) ?>">
+                <div class="order <?= escapeHtml($orderClass) ?>">
                     <div class="order-summary">
                         <div class="order-summary-products">
                             <?php foreach ($order['products'] as $product): ?>
                                 <div class="order-summary-product">
                                     <div class="order-summary-product__name">
-                                        <?= e((string) $product['name']) ?>
+                                        <?= escapeHtml((string) $product['name']) ?>
                                     </div>
 
                                     <div class="order-summary-product__amount">

@@ -65,6 +65,51 @@ function registerUser(
     ]);
 }
 
+
+function registerPersonnelUser(
+    PDO $db,
+    string $username,
+    string $firstName,
+    string $lastName,
+    string $password,
+    string $passwordRepeated
+): bool {
+    $username = trim($username);
+    $firstName = trim($firstName);
+    $lastName = trim($lastName);
+
+    if ($username === '' || $firstName === '' || $lastName === '') {
+        return false;
+    }
+
+    if ($password === '' || $passwordRepeated === '') {
+        return false;
+    }
+
+    if ($password !== $passwordRepeated) {
+        return false;
+    }
+
+    if (getUserByUsername($db, $username) !== null) {
+        return false;
+    }
+
+    $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+
+    $stmt = $db->prepare("
+        INSERT INTO [user] (username, first_name, last_name, password, role)
+        VALUES (:username, :first_name, :last_name, :password, :role)
+    ");
+
+    return $stmt->execute([
+        ':username' => $username,
+        ':first_name' => $firstName,
+        ':last_name' => $lastName,
+        ':password' => $hashedPassword,
+        ':role' => 'Personnel',
+    ]);
+}
+
 function signIn(PDO $db, string $username, string $password): bool
 {
     $username = trim($username);
