@@ -8,12 +8,32 @@ $error = null;
 
 $order = getLatestOrderForCurrentVisitor($db);
 
+if ($_GET['order']) {
+    $order = getOrderById($db, $_GET['order']);
+}
+
 if ($order === null) {
     $error = 'No recent order found.';
 }
 
 $status = $order !== null ? (int) $order['status'] : 0;
 $statusLabel = getOrderStatusLabel($status);
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $action = $_POST['action'] ?? '';
+
+    if ($action === 'mark_arrived') {
+        $orderId = (int) ($_POST['order_id'] ?? 0);
+
+        if ($orderId > 0) {
+            updateOrderStatus($db, $orderId, 5);
+        }
+
+        header('Location: orderStatus.php');
+        exit;
+    }
+}
+
 
 ?>
 <!DOCTYPE html>

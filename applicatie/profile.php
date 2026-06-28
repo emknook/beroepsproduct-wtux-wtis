@@ -91,7 +91,7 @@ if ($address === '') {
                 </div>
 
                 <div class="profile-details__row">
-                    <div>Email</div>
+                    <div>Username</div>
                     <div><?= e($username) ?></div>
                 </div>
 

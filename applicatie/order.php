@@ -59,8 +59,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                 $result = createOrder($db, $clientUsername, $clientName, $address);
 
-                if ($result === true) {
-                    header('Location: orderStatus.php');
+                if (is_numeric($result)) {
+                    header('Location: orderStatus.php?order=' . $result);
                     exit;
                 }
 
@@ -78,10 +78,24 @@ $cart = getCart();
 $cartTotal = getCartTotal();
 
 $defaultClientName = '';
+$defaultAddress = '';
+$defaultStreet = '';
+$defaultHouse = '';
+$defaultZip = '';
+$defaultCity = '';
 
 if (isSignedIn()) {
     $firstName = $_SESSION['user']['first_name'] ?? '';
     $lastName = $_SESSION['user']['last_name'] ?? '';
+    $defaultAddress = $_SESSION['user']['address'] ?? '';
+
+    if ($defaultAddress !== '') {
+        $splitAddress = splitAddress($defaultAddress);
+        $defaultStreet = $splitAddress['street'];
+        $defaultHouse = $splitAddress['house_number'];
+        $defaultZip = $splitAddress['zip_code'];
+        $defaultCity = $splitAddress['city'];
+    }
 
     $defaultClientName = trim($firstName . ' ' . $lastName);
 }
@@ -206,22 +220,28 @@ function formatPrice(float $price): string
 
                             <div class="address-input address-input-zip">
                                 <label for="zip">Zipcode</label>
-                                <input id="zip" class="text-input" name="zip" required>
+                                <input id="zip" class="text-input" name="zip"
+                                    value="<?= htmlspecialchars($defaultZip, ENT_QUOTES, 'UTF-8') ?>" required>
                             </div>
 
                             <div class="address-input address-input-housenr">
                                 <label for="housenumber">House number</label>
-                                <input id="housenumber" class="text-input" name="housenumber" required>
+                                <input id="housenumber" class="text-input"
+                                    value="<?= htmlspecialchars($defaultHouse, ENT_QUOTES, 'UTF-8') ?>" name="housenumber"
+                                    required>
                             </div>
 
                             <div class="address-input address-input-street">
                                 <label for="street">Street</label>
-                                <input id="street" class="text-input" name="street" required>
+                                <input id="street" class="text-input"
+                                    value="<?= htmlspecialchars($defaultStreet, ENT_QUOTES, 'UTF-8') ?>" name="street"
+                                    required>
                             </div>
 
                             <div class="address-input address-input-city">
                                 <label for="city">City</label>
-                                <input id="city" class="text-input" name="city" required>
+                                <input id="city" class="text-input"
+                                    value="<?= htmlspecialchars($defaultCity, ENT_QUOTES, 'UTF-8') ?>" name="city" required>
                             </div>
                         </div>
                         <button class="button submit-button" type="submit">

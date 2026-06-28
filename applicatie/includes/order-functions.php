@@ -65,17 +65,19 @@ function createOrder(PDO $db, ?string $clientUsername, string $clientName, strin
             if ($user !== false) {
                 $currentAddress = trim((string) ($user['address'] ?? ''));
 
-                if ($currentAddress === '') {
+                if ($currentAddress === '' | $currentAddress === NULL) {
                     $updateUserStmt = $db->prepare("
                         UPDATE [User]
                         SET address = :address
                         WHERE username = :username
                     ");
 
-                    $updateUserStmt->execute([
+                    $result = $updateUserStmt->execute([
                         ':address' => $address,
                         ':username' => $clientUsername,
                     ]);
+
+                    return $result;
                 }
             }
         }
@@ -135,7 +137,7 @@ function createOrder(PDO $db, ?string $clientUsername, string $clientName, strin
 
         emptyCart();
 
-        return true;
+        return $orderId;
     } catch (Throwable $exception) {
         if ($db->inTransaction()) {
             $db->rollBack();
@@ -395,21 +397,30 @@ function statusClass(int $currentStatus, int $stepStatus): string
     return $currentStatus >= $stepStatus ? ' processed' : '';
 }
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $action = $_POST['action'] ?? '';
+function getOrderById(PDO $db, int $orderId): ?array
+{
 
-    if ($action === 'mark_arrived') {
-        $orderId = (int) ($_POST['order_id'] ?? 0);
+    $stmt = $db->prepare("
+        SELECT TOP 1
+            order_id,
+            client_username,
+            client_name,
+            personnel_username,
+            datetime,
+            status,
+            address
+        FROM Pizza_Order
+        WHERE order_id = :order_id
+    ");
 
-        if ($orderId > 0) {
-            updateOrderStatus($db, $orderId, 5);
-        }
+    $stmt->execute([
+        ':order_id' => $orderId,
+    ]);
 
-        header('Location: orderStatus.php');
-        exit;
-    }
+    $order = $stmt->fetch();
+
+    return $order ?: null;
 }
-
 
 function formatOrderDateTime(mixed $datetime): string
 {
@@ -442,4 +453,22 @@ function isStatusProcessed(int $currentStatus, int $stepStatus): string
     }
 
     return $currentStatus >= $stepStatus ? ' processed' : '';
+}
+
+function splitAddress(string $address): ?array
+{
+    $address = trim($address);
+
+    $pattern = '/^(.+?)\s+(\d+\s*[a-zA-Z]?),\s*([^,]+),\s*(.+)$/';
+
+    if (!preg_match($pattern, $address, $matches)) {
+        return null;
+    }
+
+    return [
+        'street' => trim($matches[1]),
+        'house_number' => trim($matches[2]),
+        'zip_code' => trim($matches[3]),
+        'city' => trim($matches[4]),
+    ];
 }

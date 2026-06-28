@@ -7,7 +7,7 @@ function getUserByUsername(PDO $db, string $username): ?array
     $username = trim($username);
 
     $stmt = $db->prepare("
-        SELECT username, first_name, last_name, password, role
+        SELECT username, first_name, last_name, password, role, address
         FROM [user]
         WHERE username = :username
     ");
@@ -45,10 +45,6 @@ function registerUser(
         return false;
     }
 
-    if (strlen($password) < 6) {
-        return false;
-    }
-
     if (getUserByUsername($db, $username) !== null) {
         return false;
     }
@@ -65,7 +61,7 @@ function registerUser(
         ':first_name' => $firstName,
         ':last_name' => $lastName,
         ':password' => $hashedPassword,
-        ':role' => 'Personnel',
+        ':role' => 'Client',
     ]);
 }
 
@@ -94,6 +90,7 @@ function signIn(PDO $db, string $username, string $password): bool
         'first_name' => $user['first_name'],
         'last_name' => $user['last_name'],
         'role' => $user['role'],
+        'address' => $user['address'],
     ];
 
     if ($user['role'] === 'Personnel') {
