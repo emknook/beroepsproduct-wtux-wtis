@@ -1,6 +1,6 @@
 <?php
 
-require_once 'includes/setup.php';
+require_once '../includes/setup.php';
 
 $db = db();
 
@@ -54,7 +54,7 @@ $cartAmount = getCartAmount();
 </head>
 
 <body>
-    <?php require 'includes/header.php'; ?>
+    <?php require '../includes/header.php'; ?>
     <main>
         <div class="content">
             <div class="border-form">

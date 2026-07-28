@@ -77,7 +77,6 @@ function createOrder(PDO $db, ?string $clientUsername, string $clientName, strin
                         ':username' => $clientUsername,
                     ]);
 
-                    return $result;
                 }
             }
         }

@@ -205,6 +205,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
         </div>
     </main>
+    <footer>
+        <p>&copy; 2026 Pizzeria</p>
+
+        <nav aria-label="Voettekst">
+            <a href="avg.php">Privacyverklaring</a>
+        </nav>
+    </footer>
 
 </body>
 

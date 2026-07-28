@@ -157,6 +157,13 @@ if ($address === '') {
             </div>
         </section>
     </main>
+    <footer>
+        <p>&copy; 2026 Pizzeria</p>
+
+        <nav aria-label="Voettekst">
+            <a href="avg.php">Privacyverklaring</a>
+        </nav>
+    </footer>
 
 </body>
 

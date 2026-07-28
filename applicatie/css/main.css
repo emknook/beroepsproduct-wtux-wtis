@@ -1079,3 +1079,9 @@ types
     }
 
 }
+
+/** footer **/
+footer {
+    padding: 1rem 2rem;
+    text-align: right;
+}
