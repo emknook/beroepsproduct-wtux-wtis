@@ -62,7 +62,7 @@ $orders = getOrderOverview($db);
                 $status = (int) $order['status'];
                 $orderClass = getOrderCssClass($status);
                 $clientName = escapeHtml((string) $order['client_name']);
-                $address = nl2br(e(str_replace(', ', "\n", (string) $order['address'])));
+                $address = nl2br(escapeHtml(str_replace(', ', "\n", (string) $order['address'])));
                 $datetime = formatOrderDateTime($order['datetime']);
                 $statusLabel = escapeHtml(getOrderStatusLabel($status));
                 ?>
